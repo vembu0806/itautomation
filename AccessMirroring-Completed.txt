@@ -1,4 +1,4 @@
-﻿##INPUT BOX
+﻿## This Script will pull the list of groups with the group manager name and their email address from a user profile.
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 $gname = [Microsoft.VisualBasic.Interaction]::InputBox("Enter the User's ID", "Access Mirroring", "")
 
