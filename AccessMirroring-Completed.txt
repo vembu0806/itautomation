@@ -1,0 +1,23 @@
+﻿##INPUT BOX
+[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
+$gname = [Microsoft.VisualBasic.Interaction]::InputBox("Enter the User's ID", "Access Mirroring", "")
+
+##Exporting Group membership
+Get-ADUser -Identity $gname | Get-adprincipalgroupmembership | Get-ADGroup -Properties managedby |
+ForEach-Object { `
+$managedBy = $_.managedBy;
+
+if ($managedBy -ne $null)
+{
+ $manager = (get-aduser -Identity $managedBy -Properties emailAddress);
+ $managerName = $manager.Name;
+ $managerEmail = $manager.emailAddress;
+}
+else
+{
+ $managerName = 'N/A';
+ $managerEmail = 'N/A';
+}
+
+Write-Output $_; } |
+Select-Object @{n='Group Name';e={$_.Name}}, @{n='Managed By Name';e={$managerName}}, @{n='Managed By Email';e={$managerEmail}} | export-csv C:\temp\$gname.csv
