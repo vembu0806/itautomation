@@ -1,0 +1,103 @@
+#This C# GUI tool will execute powershell scripts provide here
+
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
+
+$objForm = New-Object System.Windows.Forms.Form 
+$objForm.Text = "ADMgmt"
+$objForm.Size = New-Object System.Drawing.Size(500,600) 
+$objForm.StartPosition = "CenterScreen"
+
+    {$x=$objTextBox.Text;$objForm.Close()}
+$objForm.Add_KeyDown({if ($_.KeyCode -eq "Escape") 
+    {$objForm.Close()}})
+
+#INPUTBOX-1
+$objLabel = New-Object System.Windows.Forms.Label
+$objLabel.Location = New-Object System.Drawing.Size(10,20) 
+$objLabel.Size = New-Object System.Drawing.Size(320,20) 
+$objLabel.Text = "Enter PUID to export groups and its owner details:"
+$objForm.Controls.Add($objLabel) 
+
+$objTextBox = New-Object System.Windows.Forms.TextBox 
+$objTextBox.Location = New-Object System.Drawing.Size(10,40) 
+$objTextBox.Size = New-Object System.Drawing.Size(260,20) 
+$objForm.Controls.Add($objTextBox) 
+
+$OKButton = New-Object System.Windows.Forms.Button
+$OKButton.Location = New-Object System.Drawing.Size(300,40)
+$OKButton.Size = New-Object System.Drawing.Size(75,23)
+$OKButton.Text = "Export"
+$OKButton.Add_Click({
+$gname=$objTextBox.Text
+#start
+
+Get-ADUser -Identity $gname | Get-adprincipalgroupmembership | Get-ADGroup -Properties managedby |
+ForEach-Object { 
+$managedBy = $_.managedBy;
+
+if ($managedBy -ne $null)
+{
+ $manager = (get-aduser -Identity $managedBy -Properties emailAddress);
+ $managerName = $manager.Name;
+ $managerEmail = $manager.emailAddress;
+}
+else
+{
+ $managerName = 'N/A';
+ $managerEmail = 'N/A';
+}
+
+Write-Output $_; } |
+Select-Object @{n='Group Name';e={$_.Name}}, @{n='Managed By Name';e={$managerName}}, @{n='Managed By Email';e={$managerEmail}} | export-csv C:\temp\$gname.csv
+[System.Windows.MessageBox]::Show('CSV File has been exported to C:\temp\<PUID>.csv')
+#end
+})
+$objForm.Controls.Add($OKButton)
+
+
+
+#INPUTBOX-2
+$obj1Label = New-Object System.Windows.Forms.Label
+$obj1Label.Location = New-Object System.Drawing.Size(10,100) 
+$obj1Label.Size = New-Object System.Drawing.Size(320,20) 
+$obj1Label.Text = "Enter the group name to export members:"
+$objForm.Controls.Add($obj1Label) 
+
+$obj1TextBox = New-Object System.Windows.Forms.TextBox 
+$obj1TextBox.Location = New-Object System.Drawing.Size(10,120) 
+$obj1TextBox.Size = New-Object System.Drawing.Size(260,20) 
+$objForm.Controls.Add($obj1TextBox) 
+
+$OK1Button = New-Object System.Windows.Forms.Button
+$OK1Button.Location = New-Object System.Drawing.Size(300,120)
+$OK1Button.Size = New-Object System.Drawing.Size(75,23)
+$OK1Button.Text = "Export"
+$OK1Button.Add_Click({
+$pname=$obj1TextBox.Text
+#start
+
+Get-ADgroupmember $pname | Get-aduser | select name, title, department | sort name,
+title, department | Export-Csv C:\temp\$pname.csv
+[System.Windows.MessageBox]::Show('CSV File has been exported to C:\temp\<Group name>.csv')
+#end
+})
+$objForm.Controls.Add($OK1Button)
+
+#############
+#           #
+#EXIT Button#
+#           #
+#############
+$CancelButton = New-Object System.Windows.Forms.Button
+$CancelButton.Location = New-Object System.Drawing.Size(200,520)
+$CancelButton.Size = New-Object System.Drawing.Size(75,23)
+$CancelButton.Text = "Exit"
+$CancelButton.Add_Click({$objForm.Close()})
+$objForm.Controls.Add($CancelButton)
+
+
+$objForm.Topmost = $True
+
+$objForm.Add_Shown({$objForm.Activate()})
+[void] $objForm.ShowDialog()
