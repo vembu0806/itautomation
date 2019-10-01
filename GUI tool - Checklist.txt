@@ -1,0 +1,337 @@
+#THIS GUI tool can be used an Checklist tool to avoid human errors when a certain task is performed repeatly by multiple members
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
+
+$objForm = New-Object System.Windows.Forms.Form 
+$objForm.Text = "Checklists"
+$objForm.Size = New-Object System.Drawing.Size(500,600) 
+$objForm.StartPosition = "CenterScreen"
+
+    $objForm.KeyPreview = $True
+$objForm.Add_KeyDown({if ($_.KeyCode -eq "Escape") 
+    {$objForm.Close()}})
+    
+#INPUTBOX-1
+$objLabel = New-Object System.Windows.Forms.Label
+$objLabel.Location = New-Object System.Drawing.Size(10,20) 
+$objLabel.Size = New-Object System.Drawing.Size(280,20) 
+$objLabel.Text = "Please select the application to Display the Checklist"
+$objForm.Controls.Add($objLabel) 
+
+
+$CAIIButton = New-Object System.Windows.Forms.Button
+$CAIIButton.Location = New-Object System.Drawing.Size(180,65)
+$CAIIButton.Size = New-Object System.Drawing.Size(75,23)
+$CAIIButton.Text = "Account1"
+$CAIIButton.Add_Click({
+#Start CAII
+
+# Datatable for your  content
+$DataTable1 = New-Object System.Data.DataTable
+[void] $DataTable1.Columns.Add("Tasks")
+
+@"
+Tasks,
+A selected
+
+A B selected
+
+Main  selected
+
+Currency set according to request form
+
+Contacts deactivated
+
+License selected
+
+Access selected
+
+All roles selected according to the form
+
+security groups selected 
+
+Enabled outlook 
+
+Comments from the user/support team checked
+"@ | ConvertFrom-Csv | ForEach-Object {
+    [void] $DataTable1.Rows.Add($_.Tasks)
+    }
+
+# Acceptable status values datatable - for your combobox
+$DataTable2 = New-Object System.Data.DataTable
+[void] $DataTable2.Columns.Add("Status")
+
+# Form
+$Form = New-Object System.Windows.Forms.Form
+$Form.Size = New-Object System.Drawing.Size(500,500)
+$Form.StartPosition = "LeftScreen"
+$Form.Text = "CAII Checklist"
+
+# Form event handlers
+$Form.Add_Shown({
+    $Form.Activate()
+    })
+
+# Datagridview
+$DGV = New-Object System.Windows.Forms.DataGridView
+$DGV.Anchor = [System.Windows.Forms.AnchorStyles]::Right -bor [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Top
+$DGV.Location = New-Object System.Drawing.Size(0,0) 
+$DGV.Size = New-Object System.Drawing.Size(480,400)
+$DGV.Font = New-Object System.Drawing.Font("Calibri",10,0,3,1)
+$DGV.BackgroundColor = "#ffffffff"
+$DGV.BorderStyle = "Fixed3D"
+$DGV.AlternatingRowsDefaultCellStyle.BackColor = "#ffe6e6e6"
+$DGV.AutoSizeRowsMode = [System.Windows.Forms.DataGridViewAutoSizeRowsMode]::AllCells
+$DGV.SelectionMode = [System.Windows.Forms.DataGridViewSelectionMode]::FullRowSelect
+$DGV.ClipboardCopyMode = "EnableWithoutHeaderText"
+$DGV.AllowUserToOrderColumns = $True
+$DGV.DataSource = $DataTable1
+$DGV.AutoGenerateColumns = $False
+$DGV.RowHeadersVisible = $False
+$DGV.AllowUserToAddRows = $False
+$Form.Controls.Add($DGV)
+
+# Datagridview columns
+$Column1 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
+$Column1.Name = "Tasks"
+$Column1.HeaderText = "Tasks"
+$Column1.DataPropertyName = "Tasks"
+$Column1.AutoSizeMode = "Fill"
+
+$Column2 = New-Object System.Windows.Forms.DataGridViewCheckBoxColumn
+$Column2.Name = "Status"
+$Column2.HeaderText = "Status"
+
+$DGV.Columns.AddRange($Column1, $Column2)
+  # Button 
+$Button = New-Object System.Windows.Forms.Button
+$Button.Anchor = [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Bottom
+$Button.Location = New-Object System.Drawing.Size(200,420) 
+$Button.Text = "Exit"
+$Button.Add_Click({$Form.Close()})
+$Form.Controls.Add($Button)
+
+[void] $Form.Show()
+
+#End CAII
+})
+$objForm.Controls.Add($CAIIButton)
+
+$MedlimsButton = New-Object System.Windows.Forms.Button
+$MedlimsButton.Location = New-Object System.Drawing.Size(180,115)
+$MedlimsButton.Size = New-Object System.Drawing.Size(75,23)
+$MedlimsButton.Text = "Account2"
+$MedlimsButton.Add_Click({
+#Start Medlims
+
+# Datatable for your  content
+$DataTable1 = New-Object System.Data.DataTable
+[void] $DataTable1.Columns.Add("Tasks")
+
+@"
+Tasks,
+A selected
+
+A B selected
+
+Main  selected
+
+Currency set according to request form
+
+Contacts deactivated
+
+License selected
+
+Access selected
+
+All roles selected according to the form
+
+security groups selected 
+
+Enabled outlook 
+
+Comments from the user/support team checked
+"@ | ConvertFrom-Csv | ForEach-Object {
+    [void] $DataTable1.Rows.Add($_.Tasks)
+    }
+
+# Acceptable status values datatable - for your combobox
+$DataTable2 = New-Object System.Data.DataTable
+[void] $DataTable2.Columns.Add("Status")
+
+# Form
+$Form = New-Object System.Windows.Forms.Form
+$Form.Size = New-Object System.Drawing.Size(500,500)
+$Form.StartPosition = "LeftScreen"
+$Form.Text = "Medlims Checklist"
+
+# Form event handlers
+$Form.Add_Shown({
+    $Form.Activate()
+    })
+
+# Datagridview
+$DGV = New-Object System.Windows.Forms.DataGridView
+$DGV.Anchor = [System.Windows.Forms.AnchorStyles]::Right -bor [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Top
+$DGV.Location = New-Object System.Drawing.Size(0,0) 
+$DGV.Size = New-Object System.Drawing.Size(480,400)
+$DGV.Font = New-Object System.Drawing.Font("Calibri",10,0,3,1)
+$DGV.BackgroundColor = "#ffffffff"
+$DGV.BorderStyle = "Fixed3D"
+$DGV.AlternatingRowsDefaultCellStyle.BackColor = "#ffe6e6e6"
+$DGV.AutoSizeRowsMode = [System.Windows.Forms.DataGridViewAutoSizeRowsMode]::AllCells
+$DGV.SelectionMode = [System.Windows.Forms.DataGridViewSelectionMode]::FullRowSelect
+$DGV.ClipboardCopyMode = "EnableWithoutHeaderText"
+$DGV.AllowUserToOrderColumns = $True
+$DGV.DataSource = $DataTable1
+$DGV.AutoGenerateColumns = $False
+$DGV.RowHeadersVisible = $False
+$DGV.AllowUserToAddRows = $False
+$Form.Controls.Add($DGV)
+
+# Datagridview columns
+$Column1 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
+$Column1.Name = "Tasks"
+$Column1.HeaderText = "Tasks"
+$Column1.DataPropertyName = "Tasks"
+$Column1.AutoSizeMode = "Fill"
+
+$Column2 = New-Object System.Windows.Forms.DataGridViewCheckBoxColumn
+$Column2.Name = "Status"
+$Column2.HeaderText = "Status"
+
+$DGV.Columns.AddRange($Column1, $Column2)
+
+# Button 
+$Button = New-Object System.Windows.Forms.Button
+$Button.Anchor = [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Bottom
+$Button.Location = New-Object System.Drawing.Size(200,420) 
+$Button.Text = "Exit"
+$Button.Add_Click({$Form.Close()})
+$Form.Controls.Add($Button)
+
+[void] $Form.Show()
+#End Medlims
+})
+$objForm.Controls.Add($MedlimsButton)
+
+$IscalaButton = New-Object System.Windows.Forms.Button
+$IscalaButton.Location = New-Object System.Drawing.Size(180,165)
+$IscalaButton.Size = New-Object System.Drawing.Size(75,23)
+$IscalaButton.Text = "Account3"
+$IscalaButton.Add_Click({
+#strat iscala
+# Datatable for your  content
+$DataTable1 = New-Object System.Data.DataTable
+[void] $DataTable1.Columns.Add("Tasks")
+
+@"
+Tasks,
+A selected
+
+A B selected
+
+Main  selected
+
+Currency set according to request form
+
+Contacts deactivated
+
+License selected
+
+Access selected
+
+All roles selected according to the form
+
+security groups selected 
+
+Enabled outlook 
+
+Comments from the user/support team checked
+
+"@ | ConvertFrom-Csv | ForEach-Object {
+    [void] $DataTable1.Rows.Add($_.Tasks)
+    }
+
+# Acceptable status values datatable - for your combobox
+$DataTable2 = New-Object System.Data.DataTable
+[void] $DataTable2.Columns.Add("Status")
+
+# Form
+$Form = New-Object System.Windows.Forms.Form
+$Form.Size = New-Object System.Drawing.Size(500,500)
+$Form.StartPosition = "LeftScreen"
+$Form.Text = "Iscala Checklist"
+
+
+$objLabel = New-Object System.Windows.Forms.Label
+$objLabel.Location = New-Object System.Drawing.Size(80,410) 
+$objLabel.Size = New-Object System.Drawing.Size(300,100) 
+$objLabel.Text = "Ctrl+A = Select | Ctrl+C = Copy | Ctrl+V = Paste"
+$Form.Controls.Add($objLabel) 
+
+
+# Form event handlers
+$Form.Add_Shown({
+    $Form.Activate()
+    })
+
+# Datagridview
+$DGV = New-Object System.Windows.Forms.DataGridView
+$DGV.Anchor = [System.Windows.Forms.AnchorStyles]::Right -bor [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Top
+$DGV.Location = New-Object System.Drawing.Size(0,0) 
+$DGV.Size = New-Object System.Drawing.Size(480,400)
+$DGV.Font = New-Object System.Drawing.Font("Calibri",10,0,3,1)
+$DGV.BackgroundColor = "#ffffffff"
+$DGV.BorderStyle = "Fixed3D"
+$DGV.AlternatingRowsDefaultCellStyle.BackColor = "#ffe6e6e6"
+$DGV.AutoSizeRowsMode = [System.Windows.Forms.DataGridViewAutoSizeRowsMode]::AllCells
+$DGV.SelectionMode = [System.Windows.Forms.DataGridViewSelectionMode]::FullRowSelect
+$DGV.ClipboardCopyMode = "EnableWithoutHeaderText"
+$DGV.AllowUserToOrderColumns = $True
+$DGV.DataSource = $DataTable1
+$DGV.AutoGenerateColumns = $False
+$DGV.RowHeadersVisible = $False
+$DGV.AllowUserToAddRows = $False
+$Form.Controls.Add($DGV)
+
+# Datagridview columns
+$Column1 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
+$Column1.Name = "Tasks"
+$Column1.HeaderText = "Tasks"
+$Column1.DataPropertyName = "Tasks"
+$Column1.AutoSizeMode = "Fill"
+
+$Column2 = New-Object System.Windows.Forms.DataGridViewCheckBoxColumn
+$Column2.Name = "Status"
+$Column2.HeaderText = "Status"
+
+$DGV.Columns.AddRange($Column1, $Column2)
+
+
+
+[void] $Form.Show()
+
+
+
+#end Iscala
+
+})
+$objForm.Controls.Add($IscalaButton)
+
+
+
+
+#EXIT Button
+$CancelButton = New-Object System.Windows.Forms.Button
+$CancelButton.Location = New-Object System.Drawing.Size(200,520)
+$CancelButton.Size = New-Object System.Drawing.Size(75,23)
+$CancelButton.Text = "Exit"
+$CancelButton.Add_Click({$objForm.Close()})
+$objForm.Controls.Add($CancelButton)
+
+
+$objForm.Topmost = $True
+
+$objForm.Add_Shown({$objForm.Activate()})
+[void] $objForm.ShowDialog()
